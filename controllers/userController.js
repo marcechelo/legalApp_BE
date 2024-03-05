@@ -1,9 +1,7 @@
 const bcrypt                = require('bcryptjs');
-const jwt                   = require('jsonwebtoken');
 const { validationResult }  = require('express-validator');
 const User                  = require('../models/user');
 const Auth               = require('./authController')
-const { SECRET_KEY }        = require('../config/config');
 
 class UserController {
 
@@ -57,7 +55,7 @@ class UserController {
             }
             const accessToken = Auth.generateAccessToken(user[0].userId);
 
-            res.status(200).json({accessToken});
+            res.status(200).json({toke:accessToken});
 
         } catch (err) {
             console.error(err);
@@ -65,7 +63,7 @@ class UserController {
         }
     };
 
-    static async auth(req, res){
+    static async authToken(req, res){
         try {       
             const authHeader = req.headers['authorization']
             const token = authHeader && authHeader.split(' ')[1]
