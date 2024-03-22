@@ -1,7 +1,7 @@
 const bcrypt                = require('bcryptjs');
 const { validationResult }  = require('express-validator');
 const User                  = require('../models/user');
-const Auth               = require('./authController')
+const Auth                  = require('./authController')
 
 class UserController {
 
@@ -14,9 +14,11 @@ class UserController {
         }
         
         const user = new User({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email
+            firstName:  req.body.firstName,
+            lastName:   req.body.lastName,
+            email:      req.body.email,
+            id:         req.body.id,
+            phone:      req.body.password
         });        
 
         try {
@@ -31,7 +33,8 @@ class UserController {
             const userId = await User.createUser(user);
 
             res.status(201).json({messsage: 'User registered successfully', userId});
-        } catch (error) {            
+        } catch (error) {
+            console.log(error)
             res.status(500).json({error: 'Server error'});
         };
     };
