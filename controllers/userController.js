@@ -18,7 +18,7 @@ class UserController {
             lastName:   req.body.lastName,
             email:      req.body.email,
             id:         req.body.id,
-            phone:      req.body.password
+            phone:      req.body.phone
         });        
 
         try {
