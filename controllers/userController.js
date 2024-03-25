@@ -24,15 +24,14 @@ class UserController {
         try {
             
             let existingUser = await User.getUser('email', user.email); 
-            console.log(existingUser);
             if (existingUser.length) {
-                res.status(400).json({error: 'User already exist', code: 'u001'});
+                res.status(400).json({error: 'User', code: 'u001', msg: 'El usuario con ese correo ya existe'});
                 return;
             };
 
             existingUser = await User.getUser('id', user.id); 
             if (existingUser.length) {
-                res.status(400).json({error: 'User already exist', code: 'u002'});
+                res.status(400).json({error: 'User', code: 'u002', msg: 'El usuario con esa identificación ya existe'});
                 return;
             };
 
@@ -40,11 +39,11 @@ class UserController {
             user.password = await bcrypt.hash(req.body.password, salt);
             const userId = await User.createUser(user);
 
-            res.status(200).json({messsage: 'User registered successfully', code: 'u003'});
+            res.status(200).json({msg: 'El usuario se registro correctamente', code: 'u003'});
 
         } catch (error) {
             console.error(error)
-            res.status(500).json({error: 'Server error', code: 'e001'});
+            res.status(500).json({error: 'Server', code: 'e001', msg: 'Error de servidor'});
         };
     };
 
