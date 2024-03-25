@@ -28,9 +28,9 @@ User.findById = (id, result) => {
     });
 };
 
-User.getUserByEmail = async (email) => {
+User.getUser = async (type, value) => {
     return new Promise((resolve, reject) => {
-        sql.query(`SELECT * FROM users WHERE email = '${email}'`, (err, res) => {
+        sql.query(`SELECT * FROM users WHERE ${type} = '${value}'`, (err, res) => {
             if (err) {
                 reject(err);
             }else{
@@ -38,6 +38,7 @@ User.getUserByEmail = async (email) => {
             }
         });
     });
+    
 };
 
 User.createUser = async (newUser) => {

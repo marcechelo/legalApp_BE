@@ -9,7 +9,7 @@ class UserController {
         
         const errors = validationResult(req);
         if (!errors.isEmpty()) {            
-            res.status(400).json({error: errors.array()});
+            res.status(400).json({error: 'Validations error', code: 'e003', message: errors.array()[0].msg});
             return;
         }
         
@@ -23,19 +23,28 @@ class UserController {
 
         try {
             
-            const existingUser = await User.getUserByEmail(user.email); 
+            let existingUser = await User.getUser('email', user.email); 
+            console.log(existingUser);
             if (existingUser.length) {
-                res.status(400).json({error: 'User already exist'});
+                res.status(400).json({error: 'User already exist', code: 'u001'});
                 return;
-            }            
+            };
+
+            existingUser = await User.getUser('id', user.id); 
+            if (existingUser.length) {
+                res.status(400).json({error: 'User already exist', code: 'u002'});
+                return;
+            };
+
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(req.body.password, salt);
             const userId = await User.createUser(user);
 
-            res.status(201).json({messsage: 'User registered successfully', userId});
+            res.status(200).json({messsage: 'User registered successfully', code: 'u003'});
+
         } catch (error) {
-            console.log(error)
-            res.status(500).json({error: 'Server error'});
+            console.error(error)
+            res.status(500).json({error: 'Server error', code: 'e001'});
         };
     };
 
