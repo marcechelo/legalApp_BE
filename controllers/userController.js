@@ -51,27 +51,28 @@ class UserController {
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({errors:errors.array()});
+            res.status(400).json({error: 'Validations error', code: 'e003', message: errors.array()[0].msg});
         }
 
         try {
             const user = await User.getUser('email', req.body.email);
-            
             if (!user.length) {
-                res.status(400).json({error: 'User is not registered'});
+                res.status(400).json({error: 'User', code: 'u004', msg: 'El usuario no se encuentra registrado'});
                 return;
-            }              
+            }          
+
             const isPasswordValid = await bcrypt.compare(req.body.password, user[0].password)
             if (!isPasswordValid) {
-                return res.status(401).json({error: 'Invalid credentials'});
+                res.status(400).json({error: 'User', code: 'u005', msg: 'Credenciales incorrectas'});
+                return;
             }
             const accessToken = Auth.generateAccessToken(user[0].userId);
 
-            res.status(200).json({toke:accessToken});
+            res.status(200).json({toke:accessToken, code:'u006', msg: 'Ingreso exitoso'});
 
         } catch (err) {
             console.error(err);
-            res.status(500).json({error: 'Server error'});
+            res.status(500).json({error: 'Server', code: 'e001', msg: 'Error de servidor'});
         }
     };
 
