@@ -68,7 +68,7 @@ class UserController {
             }
             const accessToken = Auth.generateAccessToken(user[0].userId);
 
-            res.status(200).json({toke:accessToken, code:'u006', msg: 'Ingreso exitoso'});
+            res.status(200).json({token:accessToken, code:'u006', msg: 'Ingreso exitoso'});
 
         } catch (err) {
             console.error(err);
