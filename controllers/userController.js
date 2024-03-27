@@ -9,7 +9,7 @@ class UserController {
         
         const errors = validationResult(req);
         if (!errors.isEmpty()) {            
-            return res.status(400).json({error: 'Validations error', code: 'e003', message: errors.array()[0].msg});
+            return res.status(400).json({error: 'Validations error', code: 'e003', msg: errors.array()[0].msg});
         }
         
         const user = new User({
@@ -48,7 +48,7 @@ class UserController {
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({error: 'Validations error', code: 'e003', message: errors.array()[0].msg});
+            return res.status(400).json({error: 'Validations error', code: 'e003', msg: errors.array()[0].msg});
         }
 
         try {
