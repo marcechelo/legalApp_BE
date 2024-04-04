@@ -13,8 +13,22 @@ Catalogue.getCatalogue = async (name, value) => {
         sql.query(`SELECT * FROM Catalogue WHERE ${name} = '${value}' AND active = 1`, (err, res) => {
             if (err) {
                 reject(err);
+            }else{                
+                resolve(JSON.parse(JSON.stringify(res)));
+            }
+        });
+    });
+    
+};
+
+Catalogue.getChildren = async (father) => {
+    return new Promise((resolve, reject) => {
+        sql.query(`SELECT * FROM Catalogue WHERE father = '${father}' AND active = 1`, (err, res) => {
+            if (err) {
+                reject(err);
             }else{
-                resolve(res);
+                resolve(JSON.parse(JSON.stringify(res)));
+                //resolve(res);
             }
         });
     });

@@ -1,42 +1,26 @@
 const bcrypt                = require('bcryptjs');
 const { validationResult }  = require('express-validator');
-const User                  = require('../models/catalogue');
-const Auth                  = require('./authController')
+const Catalogue             = require('../models/catalogue');
 
 class CatalogueController {
 
-    static async getCatalogue(req, res) {
+    static async getChildren(req, res) {
         
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {            
-            return res.status(400).json({error: 'Validations error', code: 'e003', msg: errors.array()[0].msg});
-        }
-        
-        const user = new User({
-            firstName:  req.body.firstName,
-            lastName:   req.body.lastName,
-            email:      req.body.email,
-            id:         req.body.id,
-            phone:      req.body.phone
-        });        
+        const catalogue = new Catalogue({            
+            name: req.body.name
+        });     
 
         try {
             
-            let existingUser = await User.getUser('email', user.email); 
-            if (existingUser.length) {
-                return res.status(400).json({error: 'User', code: 'u001', msg: 'El usuario con ese correo ya existe'});
+            let existCatalogue = await Catalogue.getCatalogue('name', catalogue.name);
+
+            if (!existCatalogue || existCatalogue.length == 0){
+                return res.status(400).json({error: 'Catalogue', code: 'c001', msg: 'El catalogo no existe'});
             };
 
-            existingUser = await User.getUser('id', user.id); 
-            if (existingUser.length) {
-                return res.status(400).json({error: 'User', code: 'u002', msg: 'El usuario con esa identificación ya existe'});
-            };
+            let children = await Catalogue.getChildren(existCatalogue[0].id); 
 
-            const salt = await bcrypt.genSalt(10);
-            user.password = await bcrypt.hash(req.body.password, salt);
-            const userId = await User.createUser(user);
-
-            return res.status(200).json({msg: 'El usuario se registro correctamente', code: 'u003'});
+            return res.status(200).json({data: children});
 
         } catch (error) {
             console.error(error)
