@@ -7,7 +7,7 @@ class CatalogueController {
     static async getChildren(req, res) {
         
         const catalogue = new Catalogue({            
-            name: req.body.name
+            name: req.query.name
         });     
 
         try {
